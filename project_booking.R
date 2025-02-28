@@ -194,11 +194,25 @@ accuracy_long <- tidyr::pivot_longer(accuracy_comparison, cols = -Model,
 
 # plot accuracy, sensitivity, specificity
 ggplot(accuracy_long, aes(x = Model, y = Value, fill = Metric)) +
-  geom_bar(stat = "identity", position = "dodge") +
+  geom_bar(stat = "identity", position = "dodge", color = "black") +
   ggtitle("Model Performance Comparison") +
-  ylab("Score") + xlab("Model") +
-  theme_minimal() +
-  scale_fill_manual(values = c("Accuracy" = "blue", "Sensitivity" = "green", 
-                               "Specificity" = "red", "Balanced_Accuracy" = "yellow"))
+  ylab("Performance Score") + 
+  xlab("Model") +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+    legend.position = "top",
+    legend.title = element_blank(),
+    panel.grid.major = element_line(color = "gray80", linetype = "dashed"),
+    panel.grid.minor = element_blank()
+  ) +
+  scale_fill_manual(values = c(
+    "Accuracy" = "#1f78b4", 
+    "Sensitivity" = "#33a02c", 
+    "Specificity" = "#e31a1c", 
+    "Balanced_Accuracy" = "#ff7f00"
+  ))
+
 
 
