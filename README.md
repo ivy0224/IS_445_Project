@@ -1,7 +1,4 @@
 # I S 445 - Database Management Project
-## Objective
--
--
 ## Data
 - **Source**: https://www.kaggle.com/datasets/youssefaboelwafa/hotel-booking-cancellation-prediction/data
 - **Description**: The dataset contains booking data for hotels, including information on customer demographics, booking dates, and whether the booking was canceled.
