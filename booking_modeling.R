@@ -253,6 +253,7 @@ logit.cm.v6 <- confusionMatrix(factor(pred.v6, levels = c("Not_Canceled", "Cance
                                positive = "Canceled")
 logit.cm.v6
 
+
 ### Model 2: classification tree
 ## ct 2-1: default classification tree (5 nodes)
 # target: booking_binary (Canceled/Not_Canceled)
@@ -264,35 +265,52 @@ rpart.plot(default.ct, type = 1, extra = 1)
 # predict based on default tree on valid.df
 default.ct.pred <- predict(default.ct, valid.df, type = "class")
 # measure accuracy of default tree
-default.ct.cm <- confusionMatrix(default.ct.pred, factor(valid.df$booking.status), 
+default.ct.cm <- confusionMatrix(default.ct.pred, 
+                                 factor(valid.df$booking.status), 
                                  positive = "Canceled")
 default.ct.cm
 
 ## ct 2-2: control classification tree (5 nodes)
 # target: booking_binary (Canceled/Not_Canceled)
 # predictors: all other variables
-control.ct <- rpart(booking.status ~., data = train.df[, -c(1, 15)], method = "class", 
+control.ct <- rpart(booking.status ~., data = train.df[, -c(1, 15)], 
+                    method = "class", 
                     control = rpart.control(maxdepth = 3, minbucket = 30))
 rpart.plot(control.ct, type = 1, extra = 1)
+
+# use prp to make it more aesthetic for presentation
+prp(control.ct, type = 1, extra = 0, split.cex = 1.2, 
+    split.font = 2, varlen = 0, cex = 1,
+    box.palette = "Blues", fallen.leaves = TRUE,
+    branch.lty = 1)
+
+?prp
 
 # predict based on control tree on valid.df
 control.ct.pred <- predict(control.ct, valid.df, type = "class")
 # measure accuracy of control tree
-control.ct.cm <- confusionMatrix(control.ct.pred, factor(valid.df$booking.status), 
+control.ct.cm <- confusionMatrix(control.ct.pred, 
+                                 factor(valid.df$booking.status), 
                                  positive = "Canceled")
 control.ct.cm
 
+
+
+
+
 ## compare Default and Control tree
 # Accuracy: 0.828 vs 0.784
-# Sensitivity : 0.692 vs 0.743 --> what we are looking for: "Canceled"
+# Sensitivity : 0.692 vs 0.743
 # Specificity : 0.894 vs 0.804
 # Balanced Accuracy: 0.793 vs 0.774
 ## choose Control tree
 # reasoning: 1. avoid problem of overfitting
-#            2. though the overall accuracy is lower, but higher sensitivity (match our goal)
-#            3. 4% decrease in accuracy but easier model to interpret, fewer variables needed
+#            2. though the overall accuracy is lower, 
+#               but higher sensitivity (match our goal)
+#            3. 4% decrease in accuracy but easier model to interpret, 
+#               fewer variables needed
 
-# Model 3: randomForest ensemble of decision tree
+# Model 3: Random Forest ensemble of decision tree
 rf <- randomForest(booking.status~., data = train.df[, -c(1, 15)], 
                    ntree = 500, mtry = sqrt(ncol(train.df) - 2), 
                    importance = TRUE)
@@ -303,7 +321,7 @@ varImpPlot(rf)
 rf.pred <- predict(rf, valid.df, type = "prob")[,2]
 head(rf.pred)
 
-# set cutoff value = 0.5
+# set cutoff value = 0.4
 rf.pred <- ifelse(rf.pred > 0.4, "Canceled", "Not_Canceled")
 
 # measure accuracy of randomForest decision tree
