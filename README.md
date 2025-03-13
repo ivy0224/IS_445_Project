@@ -1,4 +1,5 @@
 # I S 445 - Database Management Project
+# Hotel Cancellation Analysis
 ## Exploratory Questions(SQL and Tableau)
   - **Question 1**: How do special requests affect hotel cancellation rates? 
   - **Question 2**: How does the cancellation rate vary across different seasons?
